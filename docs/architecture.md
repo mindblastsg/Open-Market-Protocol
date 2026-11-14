@@ -2,7 +2,7 @@
 
 ## Status
 
-This document describes a proposed architecture for review. There is no implementation yet, and no technology choice should be read as an installed dependency or proven design.
+This document describes the target architecture. A verified Phase 0 scaffold now implements the workspace, web shell, API health endpoint, draft protocol package, PostgreSQL development service, tests, and CI. Marketplace, persistence, federation, and accounting capabilities remain unimplemented.
 
 ## System intent
 
@@ -48,7 +48,7 @@ The planned economic engine has four separate concerns:
 
 Accounting calculation is not payment processing. Alpha outputs must be clearly labelled as simulations and must not create legal or financial entitlements.
 
-## Proposed technology direction
+## Reference implementation direction
 
 - **TypeScript** for the reference implementation and shared schemas.
 - **React + Vite** for the browser application.
@@ -58,7 +58,7 @@ Accounting calculation is not payment processing. Alpha outputs must be clearly 
 - **Docker Compose** for the two-node local demonstration.
 - **GitHub Actions** for repeatable quality checks.
 
-Selections remain open until recorded through architecture decisions and validated by a thin vertical prototype.
+The initial stack is recorded in [ADR 0001](adr/0001-reference-stack.md). Its suitability for marketplace persistence and federation still requires vertical prototypes.
 
 ## Core flows
 

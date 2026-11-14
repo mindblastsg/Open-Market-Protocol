@@ -13,7 +13,7 @@ Open-source infrastructure for independently operated, interoperable marketplace
 </div>
 
 > [!IMPORTANT]
-> **Pre-alpha / design stage.** This repository currently contains project documentation, not a working implementation. There is no deployed service, usable demo, published package, or verified quickstart yet.
+> **Pre-alpha / Phase 0 foundation.** This branch includes a verified development scaffold, not a working marketplace. There is no deployed service, usable marketplace demo, real federation, or payment capability.
 
 ## One market, many operators
 
@@ -104,26 +104,33 @@ The proposed v0.1 alpha will demonstrate:
 
 These are placeholders for interfaces that have not yet been built.
 
-## Quickstart — planned
+## Foundation quickstart
 
-A reproducible quickstart is a v0.1 acceptance requirement, but **the commands do not exist yet**. The intended experience is:
+The scaffold requires Node.js 22 and npm:
 
-```text
-# Planned workflow — not currently runnable
-clone repository
-start two isolated nodes with Docker Compose
-open the local demo
-complete a simulated federated booking
-inspect the event and accounting trail
+```bash
+npm ci
+npm run typecheck
+npm test
+npm run build
 ```
 
-This section will be replaced with verified commands only after a fresh clone can launch the system and its automated checks pass.
+Run the API and web shell in separate terminals:
+
+```bash
+npm run dev:api
+npm run dev:web
+```
+
+The API exposes `GET /health` on `http://127.0.0.1:3000`. The web shell is a status page, not a marketplace demo. PostgreSQL can be started with `docker compose up -d postgres`, but application persistence is not connected yet.
+
+A two-node marketplace quickstart remains a v0.1 acceptance requirement and is **not currently available**.
 
 ## Road to v0.1 alpha
 
 | Phase | Outcome | Status |
 | --- | --- | --- |
-| **0 · Foundation** | Repository structure, decisions, licence, contribution rules, CI | Documentation started |
+| **0 · Foundation** | Repository structure, decisions, licence, contribution rules, CI | In progress |
 | **1 · Standalone node** | Listings, accounts, booking simulation, operator UI | Planned |
 | **2 · Federation** | Discovery and cross-node booking between independent servers | Planned |
 | **3 · Distributed economics** | Double-entry ledger, transparent fees, simulated allocations | Planned |
@@ -131,23 +138,23 @@ This section will be replaced with verified commands only after a fresh clone ca
 
 No dates are promised. The sequence and exit criteria live in the [v0.1 roadmap](docs/roadmap.md).
 
-## Proposed architecture and stack
+## Architecture and stack
 
-The current technical direction is subject to architecture decisions and prototyping:
+The initial workspace now uses:
 
-| Layer | Proposed direction |
+| Layer | Current direction |
 | --- | --- |
 | Language | TypeScript |
-| Web application | React + Vite |
-| Node API | Fastify |
-| Persistence | PostgreSQL with migrations |
-| Federation | Fedify and applicable marketplace federation patterns |
+| Web application | React + Vite foundation shell |
+| Node API | Fastify health endpoint |
+| Persistence | PostgreSQL development service; application integration planned |
+| Federation | Fedify and applicable marketplace federation patterns under evaluation |
 | Local orchestration | Docker Compose |
-| Contracts | Versioned schemas, OpenAPI where appropriate |
-| Quality | Unit, integration, conformance, and end-to-end tests |
-| Delivery | GitHub Actions |
+| Contracts | Draft Zod schema package; versioned schemas and OpenAPI planned |
+| Quality | Type checking, API/protocol unit tests, production builds |
+| Delivery | GitHub Actions verification |
 
-Technology choices are proposals, not installed dependencies. See [architecture.md](docs/architecture.md) before treating them as commitments.
+See [ADR 0001](docs/adr/0001-reference-stack.md) and [architecture.md](docs/architecture.md). The reference stack exists; marketplace, persistence, federation, and accounting capabilities do not.
 
 ## Principles
 
@@ -177,6 +184,7 @@ Start with [CONTRIBUTING.md](CONTRIBUTING.md), then read the [architecture](docs
 
 - [Roadmap and phase exit criteria](docs/roadmap.md)
 - [Architecture and open decisions](docs/architecture.md)
+- [Reference stack decision](docs/adr/0001-reference-stack.md)
 - [Contributing guide](CONTRIBUTING.md)
 - [GitHub Pages plan](docs/github-pages.md)
 
