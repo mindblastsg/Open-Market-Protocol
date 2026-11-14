@@ -7,8 +7,10 @@ import { MarketplaceRepository } from "./marketplace.js";
 const connectionString = process.env.DATABASE_URL;
 const database = connectionString ? createDatabase(connectionString) : null;
 const marketplace = database ? new MarketplaceRepository(database.pool) : null;
-const app = marketplace ? buildApp({ marketplace }) : null;
+const operatorToken = "integration-test-operator";
+const app = marketplace ? buildApp({ marketplace, operatorToken }) : null;
 const createdAccountIds: string[] = [];
+const createdListingIds: string[] = [];
 
 afterAll(async () => {
   await app?.close();
@@ -18,10 +20,53 @@ afterAll(async () => {
       [createdAccountIds],
     );
   }
+  if (database && createdListingIds.length > 0) {
+    await database.pool.query(
+      "delete from service_listings where id = any($1::uuid[])",
+      [createdListingIds],
+    );
+  }
   await database?.close();
 });
 
 describe.skipIf(!app)("standalone marketplace flow", () => {
+  it("requires operator authentication to manage listings", async () => {
+    const unauthorised = await app!.inject({
+      method: "POST",
+      url: "/api/operator/listings",
+      payload: {
+        title: "Private draft",
+        description: "This must not be created.",
+        priceMinor: 2500,
+        currency: "GBP",
+      },
+    });
+    expect(unauthorised.statusCode).toBe(401);
+
+    const created = await app!.inject({
+      method: "POST",
+      url: "/api/operator/listings",
+      headers: { authorization: `Bearer ${operatorToken}` },
+      payload: {
+        title: "Neighbourhood repair clinic",
+        description: "A fictional local repair session.",
+        priceMinor: 2500,
+        currency: "GBP",
+      },
+    });
+    expect(created.statusCode).toBe(201);
+    const listingId = created.json().listing.id as string;
+    createdListingIds.push(listingId);
+
+    const withdrawn = await app!.inject({
+      method: "POST",
+      url: `/api/operator/listings/${listingId}/withdraw`,
+      headers: { authorization: `Bearer ${operatorToken}` },
+    });
+    expect(withdrawn.statusCode).toBe(200);
+    expect(withdrawn.json().listing.status).toBe("withdrawn");
+  });
+
   it("creates an account and completes an auditable simulated booking", async () => {
     const listingsResponse = await app!.inject({
       method: "GET",

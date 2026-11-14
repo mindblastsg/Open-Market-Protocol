@@ -107,6 +107,43 @@ export class MarketplaceRepository {
     return result.rows.map(mapListing);
   }
 
+  async createListing(input: {
+    title: string;
+    description: string;
+    priceMinor: number;
+    currency: string;
+  }) {
+    const id = randomUUID();
+    const result = await this.pool.query<ListingRow>(
+      `
+        insert into service_listings (
+          id, node_id, title, description, price_minor, currency, status
+        ) values (
+          $1, '10000000-0000-4000-8000-000000000001', $2, $3, $4, $5, 'published'
+        )
+        returning id, node_id, title, description, price_minor, currency, status
+      `,
+      [id, input.title, input.description, input.priceMinor, input.currency],
+    );
+    return mapListing(result.rows[0]!);
+  }
+
+  async withdrawListing(id: string) {
+    const result = await this.pool.query<ListingRow>(
+      `
+        update service_listings
+        set status = 'withdrawn', updated_at = now()
+        where id = $1 and status = 'published'
+        returning id, node_id, title, description, price_minor, currency, status
+      `,
+      [id],
+    );
+    if (!result.rows[0]) {
+      throw new MarketplaceNotFoundError("Published listing not found");
+    }
+    return mapListing(result.rows[0]);
+  }
+
   async createOrFindAccount(input: { displayName: string; email: string }) {
     const id = randomUUID();
     const result = await this.pool.query<AccountRow>(

@@ -7,6 +7,7 @@ export type DatabaseCheck = () => Promise<boolean>;
 interface BuildAppOptions {
   checkDatabase?: DatabaseCheck;
   marketplace?: MarketplaceRepository;
+  operatorToken?: string;
 }
 
 export function buildApp(options: BuildAppOptions = {}) {
@@ -32,7 +33,7 @@ export function buildApp(options: BuildAppOptions = {}) {
   });
 
   if (options.marketplace) {
-    registerMarketplaceRoutes(app, options.marketplace);
+    registerMarketplaceRoutes(app, options.marketplace, options.operatorToken);
   }
 
   return app;

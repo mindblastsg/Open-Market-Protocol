@@ -31,13 +31,23 @@ export function App() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [operatorToken, setOperatorToken] = useState("");
+  const [listingTitle, setListingTitle] = useState("");
+  const [listingDescription, setListingDescription] = useState("");
+  const [listingPrice, setListingPrice] = useState("25.00");
+
+  async function loadListings() {
+    const response = await api<{ listings: ServiceListing[] }>("/api/listings");
+    setListings(response.listings);
+    setSelectedId((current) =>
+      response.listings.some((listing) => listing.id === current)
+        ? current
+        : (response.listings[0]?.id ?? ""),
+    );
+  }
 
   useEffect(() => {
-    void api<{ listings: ServiceListing[] }>("/api/listings")
-      .then(({ listings: nextListings }) => {
-        setListings(nextListings);
-        setSelectedId(nextListings[0]?.id ?? "");
-      })
+    void loadListings()
       .catch((reason: unknown) =>
         setError(reason instanceof Error ? reason.message : "Failed"),
       )
@@ -98,17 +108,77 @@ export function App() {
     }
   }
 
+  async function createListing(event: FormEvent) {
+    event.preventDefault();
+    setSubmitting(true);
+    setError("");
+    try {
+      await api<{ listing: ServiceListing }>("/api/operator/listings", {
+        method: "POST",
+        headers: { authorization: `Bearer ${operatorToken}` },
+        body: JSON.stringify({
+          title: listingTitle,
+          description: listingDescription,
+          priceMinor: Math.round(Number(listingPrice) * 100),
+          currency: "GBP",
+        }),
+      });
+      setListingTitle("");
+      setListingDescription("");
+      await loadListings();
+    } catch (reason) {
+      setError(
+        reason instanceof Error ? reason.message : "Unable to create listing",
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function withdrawListing(id: string) {
+    setSubmitting(true);
+    setError("");
+    try {
+      await api(`/api/operator/listings/${id}/withdraw`, {
+        method: "POST",
+        headers: { authorization: `Bearer ${operatorToken}` },
+      });
+      await loadListings();
+    } catch (reason) {
+      setError(
+        reason instanceof Error ? reason.message : "Unable to withdraw listing",
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
     <main>
       <header className="hero">
         <p className="eyebrow">OPEN MARKET PROTOCOL · SINGLE-NODE DEMO</p>
         <h1>A market you can inspect.</h1>
         <p className="lede">
-          Browse fictional local services, create a simulated booking, and
-          follow every state change. No payment is collected and no real service
-          is offered.
+          More choice without surrendering control. Browse fictional local
+          services, lock the displayed price into a simulated booking, and
+          follow every state change from one transparent record.
         </p>
       </header>
+
+      <div className="benefits" aria-label="Consumer benefits">
+        <div>
+          <strong>Know the deal</strong>
+          <span>The selected price is captured with the booking.</span>
+        </div>
+        <div>
+          <strong>Keep your proof</strong>
+          <span>Every state change has a visible sequence and time.</span>
+        </div>
+        <div>
+          <strong>Choose beyond one gatekeeper</strong>
+          <span>Federated discovery is the next milestone.</span>
+        </div>
+      </div>
 
       {error && (
         <p className="error" role="alert">
@@ -252,6 +322,80 @@ export function App() {
           </ol>
         </section>
       )}
+
+      <section aria-labelledby="operator-title">
+        <div className="section-heading">
+          <div>
+            <p className="section-number">04</p>
+            <h2 id="operator-title">Operate the local market</h2>
+          </div>
+          <p>Development access</p>
+        </div>
+        <p className="operator-intro">
+          Add or withdraw fictional services. Use the local operator token from
+          your environment; this is not production authentication.
+        </p>
+        <form className="operator-form" onSubmit={createListing}>
+          <label>
+            Operator token
+            <input
+              required
+              type="password"
+              value={operatorToken}
+              onChange={(event) => setOperatorToken(event.target.value)}
+            />
+          </label>
+          <label>
+            Service title
+            <input
+              required
+              maxLength={160}
+              value={listingTitle}
+              onChange={(event) => setListingTitle(event.target.value)}
+              placeholder="Neighbourhood repair clinic"
+            />
+          </label>
+          <label className="wide">
+            Description
+            <input
+              required
+              value={listingDescription}
+              onChange={(event) => setListingDescription(event.target.value)}
+              placeholder="Describe the fictional service clearly."
+            />
+          </label>
+          <label>
+            Price in GBP
+            <input
+              required
+              type="number"
+              min="0"
+              step="0.01"
+              value={listingPrice}
+              onChange={(event) => setListingPrice(event.target.value)}
+            />
+          </label>
+          <button className="primary" disabled={submitting} type="submit">
+            Publish fictional service
+          </button>
+        </form>
+        {operatorToken && (
+          <div className="operator-listings">
+            {listings.map((listing) => (
+              <div key={listing.id}>
+                <span>{listing.title}</span>
+                <button
+                  disabled={submitting}
+                  onClick={() => withdrawListing(listing.id)}
+                  type="button"
+                >
+                  Withdraw
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
 
       <footer>
         <strong>Local node · Pre-alpha</strong>

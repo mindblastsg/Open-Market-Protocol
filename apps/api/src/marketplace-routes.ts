@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import {
   createAccountSchema,
   createBookingSchema,
+  createServiceListingSchema,
   transitionBookingSchema,
 } from "@omp/protocol";
 import {
@@ -13,6 +14,7 @@ import {
 export function registerMarketplaceRoutes(
   app: FastifyInstance,
   marketplace: MarketplaceRepository,
+  operatorToken?: string,
 ) {
   app.get("/api/listings", async () => ({
     listings: await marketplace.listPublishedListings(),
@@ -85,6 +87,51 @@ export function registerMarketplaceRoutes(
         }
         if (error instanceof InvalidBookingTransitionError) {
           return reply.code(409).send({ error: error.message });
+        }
+        throw error;
+      }
+    },
+  );
+
+  function requireOperator(authorization: string | undefined) {
+    return Boolean(
+      operatorToken && authorization === `Bearer ${operatorToken}`,
+    );
+  }
+
+  app.post("/api/operator/listings", async (request, reply) => {
+    if (!requireOperator(request.headers.authorization)) {
+      return reply
+        .code(401)
+        .send({ error: "Operator authentication required" });
+    }
+    const parsed = createServiceListingSchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.code(400).send({
+        error: "Invalid listing",
+        details: parsed.error.issues,
+      });
+    }
+    return reply
+      .code(201)
+      .send({ listing: await marketplace.createListing(parsed.data) });
+  });
+
+  app.post<{ Params: { id: string } }>(
+    "/api/operator/listings/:id/withdraw",
+    async (request, reply) => {
+      if (!requireOperator(request.headers.authorization)) {
+        return reply
+          .code(401)
+          .send({ error: "Operator authentication required" });
+      }
+      try {
+        return {
+          listing: await marketplace.withdrawListing(request.params.id),
+        };
+      } catch (error) {
+        if (error instanceof MarketplaceNotFoundError) {
+          return reply.code(404).send({ error: error.message });
         }
         throw error;
       }

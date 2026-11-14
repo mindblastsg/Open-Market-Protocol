@@ -8,6 +8,7 @@ const app = database
   ? buildApp({
       checkDatabase: () => database.ping(),
       marketplace: new MarketplaceRepository(database.pool),
+      operatorToken: process.env.OPERATOR_TOKEN ?? "",
     })
   : buildApp();
 const port = Number(process.env.PORT ?? 3000);

@@ -25,6 +25,17 @@ export const serviceListingSchema = z.object({
   status: z.enum(["draft", "published", "withdrawn"]),
 });
 
+export const createServiceListingSchema = serviceListingSchema
+  .pick({
+    title: true,
+    description: true,
+    priceMinor: true,
+    currency: true,
+  })
+  .extend({
+    currency: currencySchema.default("GBP"),
+  });
+
 export const accountSchema = z.object({
   id: z.string().uuid(),
   displayName: z.string().trim().min(1).max(120),
