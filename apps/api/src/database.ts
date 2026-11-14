@@ -1,6 +1,7 @@
 import pg from "pg";
 
 export interface Database {
+  pool: pg.Pool;
   ping(): Promise<boolean>;
   close(): Promise<void>;
 }
@@ -14,6 +15,7 @@ export function createDatabase(connectionString: string): Database {
   });
 
   return {
+    pool,
     async ping() {
       const result = await pool.query<{ ok: number }>("select 1 as ok");
       return result.rows[0]?.ok === 1;

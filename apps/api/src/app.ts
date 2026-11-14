@@ -1,9 +1,13 @@
 import Fastify from "fastify";
+import type { MarketplaceRepository } from "./marketplace.js";
+import { registerMarketplaceRoutes } from "./marketplace-routes.js";
 
 export type DatabaseCheck = () => Promise<boolean>;
 
 interface BuildAppOptions {
   checkDatabase?: DatabaseCheck;
+  marketplace?: MarketplaceRepository;
+  operatorToken?: string;
 }
 
 export function buildApp(options: BuildAppOptions = {}) {
@@ -27,6 +31,10 @@ export function buildApp(options: BuildAppOptions = {}) {
             : "unavailable",
     });
   });
+
+  if (options.marketplace) {
+    registerMarketplaceRoutes(app, options.marketplace, options.operatorToken);
+  }
 
   return app;
 }
