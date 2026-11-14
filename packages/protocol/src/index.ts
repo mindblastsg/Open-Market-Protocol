@@ -5,9 +5,12 @@ export const protocolVersion = "0.0.1-draft" as const;
 export const nodeDescriptorSchema = z
   .object({
     id: z.string().url(),
+    databaseId: z.string().uuid(),
     name: z.string().trim().min(1).max(120),
     protocolVersion: z.literal(protocolVersion),
     inbox: z.string().url(),
+    listings: z.string().url(),
+    publicKey: z.string().min(40),
   })
   .strict();
 
@@ -107,3 +110,38 @@ export type ServiceListing = z.infer<typeof serviceListingSchema>;
 export type Account = z.infer<typeof accountSchema>;
 export type Booking = z.infer<typeof bookingSchema>;
 export type BookingEvent = z.infer<typeof bookingEventSchema>;
+
+export const federationEventTypeSchema = z.enum([
+  "booking.proposed",
+  "booking.confirmed",
+]);
+
+export const federationEnvelopeSchema = z.object({
+  id: z.string().uuid(),
+  type: federationEventTypeSchema,
+  sender: z.string().url(),
+  sentAt: z.string().datetime(),
+  payload: z.unknown(),
+  signature: z.string().min(40),
+});
+
+export const federatedBookingProposalSchema = z.object({
+  sourceBookingId: z.string().uuid(),
+  listingId: z.string().uuid(),
+  agreedPriceMinor: z.number().int().nonnegative(),
+  currency: currencySchema,
+});
+
+export const federatedBookingReceiptSchema = z.object({
+  sourceBookingId: z.string().uuid(),
+  remoteBookingId: z.string().uuid(),
+  status: z.literal("confirmed"),
+});
+
+export type FederationEnvelope = z.infer<typeof federationEnvelopeSchema>;
+export type FederatedBookingProposal = z.infer<
+  typeof federatedBookingProposalSchema
+>;
+export type FederatedBookingReceipt = z.infer<
+  typeof federatedBookingReceiptSchema
+>;
