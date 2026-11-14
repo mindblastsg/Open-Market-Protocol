@@ -42,11 +42,12 @@ Implemented on the Phase 1 review branch:
 - create a simulated booking with a captured agreed price;
 - apply deterministic confirmation, completion, cancellation, rejection, and expiry rules;
 - inspect append-only booking state history in a responsive web interface;
-- verify the complete database-backed flow and invalid transitions in CI.
+- create and withdraw listings through token-protected local operator controls;
+- verify the database-backed participant and operator flows and invalid transitions in CI;
+- render-test the participant and operator interface.
 
 Remaining Phase 1 work:
 
-- operator-managed listing creation and withdrawal;
 - browser-level automated interaction testing.
 
 **Exit criteria:** a visitor can select a fictional service, submit a simulated booking, receive a confirmation, and inspect the full state history.

@@ -40,6 +40,17 @@ OMP takes a different direction:
 
 This is a design intent, not a claim that these properties have been implemented or validated.
 
+### A stronger deal for every side
+
+| Participant | Rational reason to join |
+| --- | --- |
+| Consumer | Broader choice, captured terms, visible history, and a credible path to portability |
+| Supplier | Reach demand on other nodes without surrendering the local customer relationship |
+| Operator | Grow the effective catalogue and demand pool without selling or centralising the market |
+| Contributor | Build against a neutral, testable protocol rather than a privileged intermediary |
+
+The network works only if cooperation is individually rational and useful without permanent subsidies. Read the [participation and incentive design](docs/economic-design.md) for the game-theoretic constraints, bootstrapping strategy, consumer metrics, and falsifiable adoption test.
+
 ## How it fits together
 
 ```mermaid
@@ -183,6 +194,7 @@ Start with [CONTRIBUTING.md](CONTRIBUTING.md), then read the [architecture](docs
 - [Roadmap and phase exit criteria](docs/roadmap.md)
 - [Architecture and open decisions](docs/architecture.md)
 - [Reference stack decision](docs/adr/0001-reference-stack.md)
+- [Participation and incentive design](docs/economic-design.md)
 - [Contributing guide](CONTRIBUTING.md)
 - [GitHub Pages plan](docs/github-pages.md)
 
