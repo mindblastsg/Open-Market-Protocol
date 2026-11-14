@@ -23,4 +23,3 @@ export function createDatabase(connectionString: string): Database {
     },
   };
 }
-

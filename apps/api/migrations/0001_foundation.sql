@@ -21,4 +21,3 @@ create table service_listings (
 );
 
 create index service_listings_node_status_idx on service_listings (node_id, status);
-

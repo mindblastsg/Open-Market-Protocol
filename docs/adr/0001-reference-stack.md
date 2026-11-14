@@ -34,4 +34,3 @@ Keep protocol schemas in a separate `@omp/protocol` package. Application package
 ## Validation
 
 Accept this decision only after continuous integration verifies type checking, tests, and production builds from a clean checkout. Revisit it if the first federation or persistence spike exposes a material mismatch.
-

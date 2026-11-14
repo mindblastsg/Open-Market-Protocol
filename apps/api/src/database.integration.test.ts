@@ -13,4 +13,3 @@ describe.skipIf(!database)("database integration", () => {
     await expect(database!.ping()).resolves.toBe(true);
   });
 });
-

@@ -12,4 +12,3 @@ export const nodeDescriptorSchema = z
   .strict();
 
 export type NodeDescriptor = z.infer<typeof nodeDescriptorSchema>;
-

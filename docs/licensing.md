@@ -27,4 +27,3 @@ Apache License 2.0 is the current recommendation because it is permissive and in
 ## Required owner action
 
 The repository owner should choose the licensing intent after considering legal advice where appropriate. Implementation work should remain review-only until that decision is recorded.
-

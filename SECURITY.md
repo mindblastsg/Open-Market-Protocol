@@ -25,4 +25,3 @@ There are no supported production releases. Security fixes will be applied to th
 The repository currently contains a development scaffold. It does not yet implement authentication, federation signatures, key management, payment processing, or production deployment. Those absences are limitations, not safe defaults.
 
 Before a public alpha, the project intends to publish a threat model covering node identity, signature verification, replay and downgrade protection, SSRF-safe discovery, schema validation, payload limits, key rotation, peer abuse, audit data, and privacy-preserving reporting.
-

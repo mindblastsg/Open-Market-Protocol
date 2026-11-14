@@ -36,4 +36,3 @@ describe("health endpoint", () => {
     });
   });
 });
-

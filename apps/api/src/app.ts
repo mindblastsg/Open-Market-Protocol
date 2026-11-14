@@ -30,4 +30,3 @@ export function buildApp(options: BuildAppOptions = {}) {
 
   return app;
 }
-
