@@ -1,6 +1,6 @@
 # Roadmap to v0.1 alpha
 
-This roadmap is a planning baseline, not a delivery promise. A verified Phase 0 application scaffold now exists on the implementation branch; marketplace capabilities remain planned. Status should change only when the relevant exit criteria can be demonstrated from a fresh checkout.
+This roadmap is a planning baseline, not a delivery promise. A verified Phase 0 scaffold and Phase 1 standalone marketplace now exist on stacked review branches; federation and economic distribution remain planned. Status should change only when the relevant exit criteria can be demonstrated from a fresh checkout.
 
 ## v0.1 definition
 
@@ -17,16 +17,15 @@ The alpha must use fictional data and simulated money. It must not imply legal o
 Current progress:
 
 - TypeScript npm workspace, API and web shells, and a separate draft protocol package are implemented;
-- CI, type checking, tests, production builds, a PostgreSQL development service, and the first proposed ADR are implemented;
+- CI, formatting, linting, type checking, tests, production builds, PostgreSQL migrations, a security policy, and the first proposed ADR are implemented;
 
 Remaining work:
 
 - define remaining repository and package boundaries;
 - record architecture decisions and protocol versioning policy;
 - select and document an open-source licence;
-- add PostgreSQL migrations and connect application persistence;
-- add formatting and linting;
-- publish security and contribution guidance.
+- select and adopt the repository licence;
+- complete remaining architecture and protocol versioning decisions.
 
 **Exit criteria:** a fresh clone launches a minimal application, connects to its local database, and passes all documented checks without external credentials.
 
@@ -34,15 +33,21 @@ Remaining work:
 
 **Goal:** demonstrate a coherent local marketplace before adding distribution.
 
-Planned domain objects include `Node`, `Operator`, `Supplier`, `Listing`, `Booking`, `Agreement`, and `Event`.
+Implemented domain objects include `Node`, `Operator`, `Supplier`, `Listing`, `Booking`, `Agreement`, and `Event`.
 
-Planned work:
+Implemented on the Phase 1 review branch:
 
-- browse and inspect fictional service listings;
-- create a simulated booking;
-- implement a deterministic, auditable booking state machine;
-- show booking history in a usable web interface;
-- provide an operator view for listings and booking state.
+- browse three seeded fictional service listings;
+- create or reuse a participant account;
+- create a simulated booking with a captured agreed price;
+- apply deterministic confirmation, completion, cancellation, rejection, and expiry rules;
+- inspect append-only booking state history in a responsive web interface;
+- verify the complete database-backed flow and invalid transitions in CI.
+
+Remaining Phase 1 work:
+
+- operator-managed listing creation and withdrawal;
+- browser-level automated interaction testing.
 
 **Exit criteria:** a visitor can select a fictional service, submit a simulated booking, receive a confirmation, and inspect the full state history.
 

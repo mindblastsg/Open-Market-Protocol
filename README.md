@@ -13,7 +13,7 @@ Open-source infrastructure for independently operated, interoperable marketplace
 </div>
 
 > [!IMPORTANT]
-> **Pre-alpha / Phase 0 foundation.** This branch includes a verified development scaffold, not a working marketplace. There is no deployed service, usable marketplace demo, real federation, or payment capability.
+> **Pre-alpha / Phase 1 single-node demo.** This branch implements a local marketplace simulation with fictional listings, accounts, bookings, and state history. It is not deployed, federated, production-ready, or connected to payments.
 
 ## One market, many operators
 
@@ -89,49 +89,47 @@ The proposed v0.1 alpha will demonstrate:
 
 **No demo is deployed today. No real payments, dividends, ownership rights, or financial entitlements are planned for the alpha.**
 
-### Product preview
+### What works in this branch
 
-<table>
-<tr>
-<td width="50%" align="center"><strong>Marketplace discovery</strong><br><br><em>Screenshot planned</em><br>Browse local and federated listings.</td>
-<td width="50%" align="center"><strong>Federation inspector</strong><br><br><em>Screenshot planned</em><br>Follow a booking across two nodes.</td>
-</tr>
-<tr>
-<td width="50%" align="center"><strong>Operator console</strong><br><br><em>Screenshot planned</em><br>Manage listings, bookings, and node settings.</td>
-<td width="50%" align="center"><strong>Economic report</strong><br><br><em>Screenshot planned</em><br>Inspect fees and simulated allocations.</td>
-</tr>
-</table>
+- three fictional service listings loaded from PostgreSQL;
+- participant account creation;
+- booking proposal with the listing price captured at creation;
+- confirm, complete, and cancel actions;
+- deterministic transition rules and append-only event history;
+- responsive browser UI and database-backed API;
+- CI integration coverage for the complete successful path and invalid terminal transitions.
 
-These are placeholders for interfaces that have not yet been built.
+Federation, distributed accounting, operator listing management, real authentication, and a hosted URL remain planned.
 
-## Foundation quickstart
+## Run the single-node demo
 
-The scaffold requires Node.js 22 and npm:
+Requirements: Node.js 22, npm, Docker, and Docker Compose.
 
 ```bash
 npm ci
-npm run typecheck
-npm test
-npm run build
+docker compose up -d postgres
+npm run db:migrate
 ```
 
-Run the API and web shell in separate terminals:
+Run the API and web application in separate terminals:
 
 ```bash
 npm run dev:api
 npm run dev:web
 ```
 
-The API exposes `GET /health` on `http://127.0.0.1:3000`. The web shell is a status page, not a marketplace demo. PostgreSQL can be started with `docker compose up -d postgres`, but application persistence is not connected yet.
+Open `http://localhost:5173`. The API is available on `http://127.0.0.1:3000`, and `GET /health` reports database readiness.
 
-A two-node marketplace quickstart remains a v0.1 acceptance requirement and is **not currently available**.
+All displayed identities, services, prices, and bookings are fictional. The application does not collect payment or create a real service agreement.
+
+A two-node marketplace quickstart remains a later acceptance requirement and is **not currently available**.
 
 ## Road to v0.1 alpha
 
 | Phase | Outcome | Status |
 | --- | --- | --- |
 | **0 · Foundation** | Repository structure, decisions, licence, contribution rules, CI | In progress |
-| **1 · Standalone node** | Listings, accounts, booking simulation, operator UI | Planned |
+| **1 · Standalone node** | Listings, accounts, booking simulation, web UI | Implemented on review branch; CI verified |
 | **2 · Federation** | Discovery and cross-node booking between independent servers | Planned |
 | **3 · Distributed economics** | Double-entry ledger, transparent fees, simulated allocations | Planned |
 | **4 · Public alpha** | Hosted demo, two-node self-hosting, tests, public documentation | Planned |
@@ -145,16 +143,16 @@ The initial workspace now uses:
 | Layer | Current direction |
 | --- | --- |
 | Language | TypeScript |
-| Web application | React + Vite foundation shell |
-| Node API | Fastify health endpoint |
-| Persistence | PostgreSQL development service; application integration planned |
+| Web application | React + Vite single-node marketplace UI |
+| Node API | Fastify health and marketplace endpoints |
+| Persistence | PostgreSQL migrations, listings, accounts, bookings, and event history |
 | Federation | Fedify and applicable marketplace federation patterns under evaluation |
 | Local orchestration | Docker Compose |
-| Contracts | Draft Zod schema package; versioned schemas and OpenAPI planned |
-| Quality | Type checking, API/protocol unit tests, production builds |
+| Contracts | Zod schemas for nodes, listings, accounts, bookings, and state transitions |
+| Quality | Formatting, linting, unit and PostgreSQL integration tests, production builds |
 | Delivery | GitHub Actions verification |
 
-See [ADR 0001](docs/adr/0001-reference-stack.md) and [architecture.md](docs/architecture.md). The reference stack exists; marketplace, persistence, federation, and accounting capabilities do not.
+See [ADR 0001](docs/adr/0001-reference-stack.md) and [architecture.md](docs/architecture.md). The standalone marketplace and persistence path exists. Federation and distributed accounting do not.
 
 ## Principles
 
@@ -167,7 +165,7 @@ See [ADR 0001](docs/adr/0001-reference-stack.md) and [architecture.md](docs/arch
 7. **No real money in alpha.** Early transactions and allocations are simulations only.
 8. **Honest documentation.** Planned capabilities stay labelled as planned until demonstrated.
 
-## Help build the foundation
+## Help build the protocol
 
 The most useful contributions right now are design review and small, explicit foundation work:
 
