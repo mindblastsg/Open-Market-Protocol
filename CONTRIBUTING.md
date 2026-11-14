@@ -1,6 +1,6 @@
 # Contributing
 
-Open Market Protocol is at a pre-alpha, documentation-first stage. Contributions are welcome, especially where they turn assumptions into testable decisions.
+Open Market Protocol is at a pre-alpha, foundation stage. Contributions are welcome, especially where they turn assumptions into testable decisions.
 
 ## Before you start
 
@@ -9,7 +9,7 @@ Open Market Protocol is at a pre-alpha, documentation-first stage. Contributions
 3. Open an issue before a large feature, protocol change, new dependency, or economic rule.
 4. Keep proposals narrow enough to review and verify independently.
 
-There is no working development environment yet. Do not publish or repeat setup commands until they have been verified from a fresh clone.
+The foundation workspace is verified with Node.js 22. Run `npm ci`, `npm run typecheck`, `npm test`, and `npm run build`. Docker is optional until working on PostgreSQL integration. The marketplace and federation demos do not exist yet.
 
 ## Good early contributions
 

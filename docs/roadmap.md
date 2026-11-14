@@ -1,6 +1,6 @@
 # Roadmap to v0.1 alpha
 
-This roadmap is a planning baseline, not a delivery promise. The repository is currently at the documentation stage. Status should change only when the relevant exit criteria can be demonstrated from a fresh checkout.
+This roadmap is a planning baseline, not a delivery promise. A verified Phase 0 application scaffold now exists on the implementation branch; marketplace capabilities remain planned. Status should change only when the relevant exit criteria can be demonstrated from a fresh checkout.
 
 ## v0.1 definition
 
@@ -14,14 +14,18 @@ The alpha must use fictional data and simulated money. It must not imply legal o
 
 **Goal:** create a maintainable and reviewable project base.
 
-Planned work:
+Current progress:
 
-- define repository and package boundaries;
+- TypeScript npm workspace, API and web shells, and a separate draft protocol package are implemented;
+- CI, type checking, tests, production builds, a PostgreSQL development service, and the first proposed ADR are implemented;
+
+Remaining work:
+
+- define remaining repository and package boundaries;
 - record architecture decisions and protocol versioning policy;
 - select and document an open-source licence;
-- scaffold the TypeScript applications and shared packages;
-- add PostgreSQL migrations and Docker Compose development services;
-- add formatting, linting, type checking, tests, and continuous integration;
+- add PostgreSQL migrations and connect application persistence;
+- add formatting and linting;
 - publish security and contribution guidance.
 
 **Exit criteria:** a fresh clone launches a minimal application, connects to its local database, and passes all documented checks without external credentials.
