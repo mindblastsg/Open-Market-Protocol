@@ -1,10 +1,14 @@
 import { buildApp } from "./app.js";
 import { createDatabase } from "./database.js";
+import { MarketplaceRepository } from "./marketplace.js";
 
 const databaseUrl = process.env.DATABASE_URL;
 const database = databaseUrl ? createDatabase(databaseUrl) : null;
 const app = database
-  ? buildApp({ checkDatabase: () => database.ping() })
+  ? buildApp({
+      checkDatabase: () => database.ping(),
+      marketplace: new MarketplaceRepository(database.pool),
+    })
   : buildApp();
 const port = Number(process.env.PORT ?? 3000);
 const host = process.env.HOST ?? "127.0.0.1";
