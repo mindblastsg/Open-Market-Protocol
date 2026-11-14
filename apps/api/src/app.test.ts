@@ -18,7 +18,21 @@ describe("health endpoint", () => {
     expect(response.json()).toEqual({
       service: "open-market-protocol-api",
       status: "ok",
-      phase: "foundation"
+      phase: "foundation",
+      database: "not-configured",
+    });
+  });
+
+  it("reports a database failure without claiming readiness", async () => {
+    const app = buildApp({ checkDatabase: async () => false });
+    apps.push(app);
+
+    const response = await app.inject({ method: "GET", url: "/health" });
+
+    expect(response.statusCode).toBe(503);
+    expect(response.json()).toMatchObject({
+      status: "degraded",
+      database: "unavailable",
     });
   });
 });

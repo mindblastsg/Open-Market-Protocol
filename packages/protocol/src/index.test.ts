@@ -7,20 +7,22 @@ describe("node descriptor", () => {
       id: "https://london.example/nodes/main",
       name: "London cooperative",
       protocolVersion,
-      inbox: "https://london.example/federation/inbox"
+      inbox: "https://london.example/federation/inbox",
     });
 
     expect(descriptor.protocolVersion).toBe("0.0.1-draft");
   });
 
   it("rejects unknown properties", () => {
-    expect(() => nodeDescriptorSchema.parse({
-      id: "https://london.example/nodes/main",
-      name: "London cooperative",
-      protocolVersion,
-      inbox: "https://london.example/federation/inbox",
-      internalDatabaseId: 42
-    })).toThrow();
+    expect(() =>
+      nodeDescriptorSchema.parse({
+        id: "https://london.example/nodes/main",
+        name: "London cooperative",
+        protocolVersion,
+        inbox: "https://london.example/federation/inbox",
+        internalDatabaseId: 42,
+      }),
+    ).toThrow();
   });
 });
 

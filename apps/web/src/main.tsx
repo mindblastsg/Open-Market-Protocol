@@ -14,10 +14,22 @@ function App() {
       <section aria-labelledby="status-title">
         <h2 id="status-title">Current status</h2>
         <dl>
-          <div><dt>Web shell</dt><dd>Available</dd></div>
-          <div><dt>API health check</dt><dd>Available</dd></div>
-          <div><dt>Marketplace demo</dt><dd>Planned</dd></div>
-          <div><dt>Federated booking</dt><dd>Planned</dd></div>
+          <div>
+            <dt>Web shell</dt>
+            <dd>Available</dd>
+          </div>
+          <div>
+            <dt>API health check</dt>
+            <dd>Available</dd>
+          </div>
+          <div>
+            <dt>Marketplace demo</dt>
+            <dd>Planned</dd>
+          </div>
+          <div>
+            <dt>Federated booking</dt>
+            <dd>Planned</dd>
+          </div>
         </dl>
       </section>
     </main>
@@ -27,5 +39,9 @@ function App() {
 const root = document.getElementById("root");
 if (!root) throw new Error("Missing application root");
 
-createRoot(root).render(<StrictMode><App /></StrictMode>);
+createRoot(root).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);
 
