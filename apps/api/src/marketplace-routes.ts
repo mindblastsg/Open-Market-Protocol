@@ -10,11 +10,13 @@ import {
   MarketplaceNotFoundError,
   type MarketplaceRepository,
 } from "./marketplace.js";
+import type { FederationService } from "./federation.js";
 
 export function registerMarketplaceRoutes(
   app: FastifyInstance,
   marketplace: MarketplaceRepository,
   operatorToken?: string,
+  federation?: FederationService,
 ) {
   app.get("/api/listings", async () => ({
     listings: await marketplace.listPublishedListings(),
@@ -40,9 +42,10 @@ export function registerMarketplaceRoutes(
         .send({ error: "Invalid booking", details: parsed.error.issues });
     }
     try {
-      return reply
-        .code(201)
-        .send({ booking: await marketplace.createBooking(parsed.data) });
+      const booking = federation
+        ? await federation.createBooking(parsed.data)
+        : await marketplace.createBooking(parsed.data);
+      return reply.code(201).send({ booking });
     } catch (error) {
       if (error instanceof MarketplaceNotFoundError) {
         return reply.code(404).send({ error: error.message });

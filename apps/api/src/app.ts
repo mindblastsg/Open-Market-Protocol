@@ -1,6 +1,8 @@
 import Fastify from "fastify";
 import type { MarketplaceRepository } from "./marketplace.js";
 import { registerMarketplaceRoutes } from "./marketplace-routes.js";
+import type { FederationService } from "./federation.js";
+import { registerFederationRoutes } from "./federation-routes.js";
 
 export type DatabaseCheck = () => Promise<boolean>;
 
@@ -8,6 +10,7 @@ interface BuildAppOptions {
   checkDatabase?: DatabaseCheck;
   marketplace?: MarketplaceRepository;
   operatorToken?: string;
+  federation?: FederationService;
 }
 
 export function buildApp(options: BuildAppOptions = {}) {
@@ -33,7 +36,16 @@ export function buildApp(options: BuildAppOptions = {}) {
   });
 
   if (options.marketplace) {
-    registerMarketplaceRoutes(app, options.marketplace, options.operatorToken);
+    registerMarketplaceRoutes(
+      app,
+      options.marketplace,
+      options.operatorToken,
+      options.federation,
+    );
+  }
+
+  if (options.federation) {
+    registerFederationRoutes(app, options.federation, options.operatorToken);
   }
 
   return app;
